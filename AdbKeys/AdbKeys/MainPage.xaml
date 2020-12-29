@@ -1,0 +1,99 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:models="clr-namespace:AdbKeys.Models"
+             xmlns:behaviors="clr-namespace:AdbKeys.Behaviors"
+             x:Class="AdbKeys.MainPage" Background="{AppThemeBinding Light=White, Dark=Black}">
+    <ContentPage.BindingContext>
+        <models:MainPageModel />
+    </ContentPage.BindingContext>
+    <ContentPage.Behaviors>
+        <behaviors:EventToCommandBehavior EventName="Appearing" Command="{Binding InitCommand}" />
+    </ContentPage.Behaviors>
+    <StackLayout>
+        <Frame BackgroundColor="#2196F3" Padding="24" CornerRadius="0">
+            <Label Text="ADB Keys Sync" HorizontalTextAlignment="Center" TextColor="White" FontSize="36"/>
+        </Frame>
+
+        <StackLayout IsVisible="True">
+            <StackLayout.Triggers>
+                <DataTrigger TargetType="StackLayout" Binding="{Binding RootStatus}" Value="{Static models:RootStatus.Granted}">
+                    <Setter Property="IsVisible" Value="False" />
+                </DataTrigger>
+
+                <DataTrigger TargetType="StackLayout" Binding="{Binding RootStatus}" Value="{Static models:RootStatus.Denied}">
+                    <Setter Property="IsVisible" Value="False" />
+                </DataTrigger>
+            </StackLayout.Triggers>
+
+            <Label Text="Checking root status, please wait..." FontSize="26" FontAttributes="Bold" HorizontalTextAlignment="Center" Padding="30,0,30,0" />
+            <ActivityIndicator  Scale="10" />
+        </StackLayout>
+
+        <StackLayout IsVisible="False">
+            <StackLayout.Triggers>
+                <DataTrigger TargetType="StackLayout" Binding="{Binding RootStatus}" Value="{Static models:RootStatus.Denied}">
+                    <Setter Property="IsVisible" Value="True" />
+                </DataTrigger>
+            </StackLayout.Triggers>
+            <Label Text="{Binding AboutApp, FallbackValue=About App}" TextColor="{AppThemeBinding Light={StaticResource LightPrimaryTextColor}, Dark={StaticResource DarkPrimaryTextColor}}" FontSize="Title" Padding="30,10,30,10"/>
+            <Label Text="On some Android GSIs (Project Treble), the RSA Prompt dont appears on connect USB or connect from ADB Wifi. To fix, need to copy adbkey.pub to device, and copy file to /data/misc/adb/adb_keys" FontSize="16" Padding="30,0,30,0"/>
+            <Label Text="To speed up this procedure, i've created this app!" FontSize="16" Padding="30,0,30,0"/>
+
+            <Label Text="No root has been installed on yout Android. Please root your system first!" 
+                   FontSize="16" Padding="30,0,30,0"
+                   FontAttributes="Bold" TextColor="DarkRed"
+            />
+        </StackLayout>
+
+        <StackLayout IsVisible="False">
+            <StackLayout.Triggers>
+                <DataTrigger TargetType="StackLayout" Binding="{Binding RootStatus}" Value="{Static models:RootStatus.Granted}">
+                    <Setter Property="IsVisible" Value="True" />
+                </DataTrigger>
+            </StackLayout.Triggers>
+            <Label Text="{Binding AboutApp, FallbackValue=About App}" FontSize="Title" Padding="30,10,30,10"/>
+            <Label Text="On some Android GSIs (Project Treble), the RSA Prompt dont appears on connect USB or connect from ADB Wifi. To fix, need to copy adbkey.pub to device, and copy file to /data/misc/adb/adb_keys" FontSize="16" Padding="30,0,30,0"/>
+            <Label Text="To speed up this procedure, i've created this app!" FontSize="16" Padding="30,0,30,0"/>
+
+            <Label Text="{Binding Status}" FontAttributes="Bold" FontSize="15" HorizontalTextAlignment="Center" Padding="30,10,30,10" />
+
+            <Button Text="Open adbkey.pub file" Style="{StaticResource OpenButton}" Command="{Binding OpenFileCommand}" IsEnabled="{Binding Loaded}" />
+            <Button Text="Copy to folder" Style="{StaticResource MoveButton}" Command="{Binding CopyToFolderCommand}" IsEnabled="{Binding CertOpened}" />
+
+            <StackLayout Orientation="Horizontal" Margin="15,0,15,0">
+                <StackLayout>
+                    <Button Text="Calculate Opened MD5" Style="{StaticResource MoveButton}" IsEnabled="True" Margin="0" Command="{Binding CalculateOpenedMD5Command}" />
+                    <Label Text="{Binding OpenedHash}" FontAttributes="Bold" HorizontalTextAlignment="Center" FontSize="16" Padding="30,0,30,0"/>
+                </StackLayout>
+
+                <StackLayout>
+                    <Button Text="Calculate Actual MD5" Style="{StaticResource OpenButton}" Margin="0" Command="{Binding CalculateActualMD5Command}" />
+                    <Label Text="{Binding ActualHash}" FontAttributes="Bold" HorizontalTextAlignment="Center" FontSize="16" Padding="30,0,30,0"/>
+                </StackLayout>
+            </StackLayout>
+
+            <Button Text="Compare MD5" Style="{StaticResource MoveButton}" IsEnabled="True"  Command="{Binding CompareHashesCommand}" />
+
+            <Label Text="MD5 Status: waiting..." FontSize="Body" Padding="30,10,30,10" HorizontalTextAlignment="Center" FontAttributes="Bold">
+                <Label.Triggers>
+                    <DataTrigger TargetType="Label" Binding="{Binding ChecksumState}" Value="{Static models:ChecksumState.Equals}">
+                        <Setter Property="Text" Value="MD5 State: waiting..." />
+                        <Setter Property="TextColor" Value="{x:Null}" />
+                    </DataTrigger>
+                    
+                    <DataTrigger TargetType="Label" Binding="{Binding ChecksumState}" Value="{Static models:ChecksumState.Equals}">
+                        <Setter Property="Text" Value="MD5 State: Equals" />
+                        <Setter Property="TextColor" Value="#28a745" />
+                    </DataTrigger>
+
+                    <DataTrigger TargetType="Label" Binding="{Binding ChecksumState}" Value="{Static models:ChecksumState.NotEquals}">
+                        <Setter Property="Text" Value="MD5 State: Not Equals" />
+                        <Setter Property="TextColor" Value="#dc3545" />
+                    </DataTrigger>
+                </Label.Triggers>
+            </Label>
+        </StackLayout>
+    </StackLayout>
+
+</ContentPage>

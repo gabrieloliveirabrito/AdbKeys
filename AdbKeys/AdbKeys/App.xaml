@@ -1,0 +1,87 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<Application xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="AdbKeys.App">
+    <Application.Resources>
+        <!-- Light colors -->
+        <Color x:Key="LightPageBackgroundColor">White</Color>
+        <Color x:Key="LightNavigationBarColor">WhiteSmoke</Color>
+        <Color x:Key="LightPrimaryColor">#2196F3</Color>
+        <Color x:Key="LightSecondaryColor">Black</Color>
+        <Color x:Key="LightPrimaryTextColor">Black</Color>
+        <Color x:Key="LightSecondaryTextColor">White</Color>
+        <Color x:Key="LightTertiaryTextColor">Gray</Color>
+
+        <!-- Dark colors -->
+        <Color x:Key="DarkPageBackgroundColor">Black</Color>
+        <Color x:Key="DarkNavigationBarColor">#2196F3</Color>
+        <Color x:Key="DarkPrimaryColor">#2166F3</Color>
+        <Color x:Key="DarkSecondaryColor">White</Color>
+        <Color x:Key="DarkPrimaryTextColor">White</Color>
+        <Color x:Key="DarkSecondaryTextColor">White</Color>
+        <Color x:Key="DarkTertiaryTextColor">WhiteSmoke</Color>
+
+        <Style TargetType="ContentPage" ApplyToDerivedTypes="True">
+            <Setter Property="Background" Value="{AppThemeBinding Light={StaticResource LightPageBackgroundColor}, Dark={StaticResource DarkPageBackgroundColor}}" />
+        </Style>
+
+        <Style TargetType="Button">
+            <Setter Property="BackgroundColor" Value="{StaticResource LightPrimaryColor}, Dark={StaticResource DarkPrimaryColor}}" />
+            <Setter Property="TextColor" Value="{AppThemeBinding Light={StaticResource LightSecondaryTextColor}, Dark={StaticResource DarkSecondaryColor}}" />
+            <Style.Triggers>
+                <Trigger TargetType="Button" Property="IsEnabled" Value="False">
+                    <Setter Property="BackgroundColor" Value="{StaticResource LightPrimaryColor}, Dark={StaticResource DarkPrimaryColor}}" />
+                </Trigger>
+
+                <Trigger TargetType="Button" Property="IsEnabled" Value="False">
+                    <Setter Property="Background" Value="Gray" />
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+
+        <Style TargetType="Label">
+            <Setter Property="TextColor"
+                    Value="{AppThemeBinding Light={StaticResource LightPrimaryTextColor}, Dark={StaticResource DarkPrimaryTextColor}}" />
+        </Style>
+
+        <Style x:Key="ButtonStyle" TargetType="Button">
+            <Setter Property="TextColor" Value="White" />
+            <Setter Property="Margin" Value="15,0,15,0" />
+
+            <Style.Triggers>
+
+                <DataTrigger TargetType="Button" Binding="{Binding Executing}" Value="True">
+                    <Setter Property="IsEnabled" Value="False" />
+                </DataTrigger>
+
+                <DataTrigger TargetType="Button" Binding="{Binding Executing}" Value="False">
+                    <Setter Property="IsEnabled" Value="True" />
+                </DataTrigger>
+            </Style.Triggers>
+        </Style>
+
+        <Style BasedOn="{StaticResource ButtonStyle}" x:Key="OpenButton" TargetType="Button">
+            <Style.Triggers>
+                <DataTrigger TargetType="Button" Binding="{Binding Loaded}" Value="True">
+                    <Setter Property="IsEnabled" Value="True" />
+                </DataTrigger>
+
+                <DataTrigger TargetType="Button" Binding="{Binding Loaded}" Value="False">
+                    <Setter Property="IsEnabled" Value="False" />
+                </DataTrigger>
+            </Style.Triggers>
+        </Style>
+
+        <Style BasedOn="{StaticResource ButtonStyle}" x:Key="MoveButton" TargetType="Button">
+            <Style.Triggers>
+                <DataTrigger TargetType="Button" Binding="{Binding CertOpened}" Value="True">
+                    <Setter Property="IsEnabled" Value="True" />
+                </DataTrigger>
+
+                <DataTrigger TargetType="Button" Binding="{Binding CertOpened}" Value="False">
+                    <Setter Property="IsEnabled" Value="False" />
+                </DataTrigger>
+            </Style.Triggers>
+        </Style>
+    </Application.Resources>
+</Application>
